@@ -12,7 +12,7 @@ export default class LottoController {
 
   constructor() {
     $('.purchaseLotto').addEventListener('submit', this.purchaseLotto.bind(this));
-    $('.inputNumbersForm').addEventListener('submit', this.printResult.bind(this));
+    $('.inputNumbersForm').addEventListener('submit', this.showModal.bind(this));
     $('.restartButton').addEventListener('click', this.resetGame.bind(this));
     $('.exit').addEventListener('click', this.exitModal.bind(this));
   }
@@ -23,8 +23,9 @@ export default class LottoController {
     e.preventDefault();
     try {
       Validator.purchaseAmount(moneyInput);
-      this.showLotto(moneyInput);
       this.#purchaseAmount = moneyInput;
+
+      this.showLotto(moneyInput);
     } catch (error) {
       alert(error.message);
     }
@@ -56,7 +57,7 @@ export default class LottoController {
     });
   }
 
-  printResult(e) {
+  showModal(e) {
     e.preventDefault();
     // const winningNumbers = new Array(6).fill().map((v, i) => Number(winningNumber[i].value));
     const winningNumbers = Array.from({ length: 6 }, (v, i) =>
@@ -70,16 +71,18 @@ export default class LottoController {
       const ranking = new Comparer(winningLotto, this.#lottos).getStatistics();
       $('.modal').style.display = 'flex';
 
-      Object.values(ranking).forEach((count, i) => {
-        $$('.matchCount')[i].innerText = count;
-      });
-
-      $('.profitRate').innerText = new ProfitCalculator(ranking).getProfitRate(
-        this.#purchaseAmount,
-      );
+      this.makeWinningStatistics(ranking);
     } catch (error) {
       alert(error.message);
     }
+  }
+
+  makeWinningStatistics(ranking) {
+    Object.values(ranking).forEach((count, i) => {
+      $$('.matchCount')[i].innerText = count;
+    });
+
+    $('.profitRate').innerText = new ProfitCalculator(ranking).getProfitRate(this.#purchaseAmount);
   }
 
   resetGame(e) {
