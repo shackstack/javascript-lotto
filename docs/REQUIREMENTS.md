@@ -93,3 +93,4 @@
 - [x] refactor: keyCode 상수화
 - [x] refactor: innerHTML 반복문 수정
 - [x] refactor: getWinningNumbers메서드 수정
+- [x] refactor: 반복문 내 $$함수 지양하도록 수정

@@ -88,17 +88,14 @@ export default class ViewModel {
   }
 
   getWinningNumbers() {
-    let winningNumbers = [];
-    $$('.winningNumber-input').forEach((v) => {
-      winningNumbers.push(v.value);
-    });
-    return winningNumbers.map(Number);
-    // return Array.from({ length: 6 }, (_, i) => Number($$('.winningNumber-input')[i].value));
+    return Array.from($$('.winningNumber-input')).map(($input) => Number($input.value));
   }
 
   makeWinningStatistics(ranking) {
-    Object.values(ranking).forEach((count, i) => {
-      $$('.matchCount')[i].innerText = count;
+    const rankingObject = Object.values(ranking);
+
+    $$('.matchCount').forEach((v, i) => {
+      v.innerText = rankingObject[i];
     });
 
     $('.profitRate').innerText = new ProfitCalculator(ranking).getProfitRate(this.#purchaseAmount);
@@ -132,9 +129,9 @@ export default class ViewModel {
       e.target !== $('.printResultButton')
     ) {
       e.preventDefault();
-      $$('.winningNumber-input').forEach((_, i) => {
-        if (e.target === $$('.winningNumber-input')[i]) {
-          i === 5 ? $('.bonusNumberInput').focus() : $$('.winningNumber-input')[i + 1].focus();
+      $$('.winningNumber-input').forEach((value, index, arr) => {
+        if (e.target === value) {
+          index === 5 ? $('.bonusNumberInput').focus() : arr[index + 1].focus();
         }
       });
     }
